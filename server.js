@@ -1,5 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+require("dotenv").config();
 
 const placeRoutes = require("./routes/place-routes");
 const usersRoutes = require("./routes/users-routes");
@@ -24,6 +26,16 @@ app.use((error, req, res, next) => {
   res.json({ message: error.message || "something went wrong" });
 });
 
-app.listen(5000, () => {
-  console.log("server running on 5000");
-});
+mongoose
+  .connect(
+    `mongodb+srv://Amarsingh:${process.env.DB_PASSWORD}@cluster0.gxqjf.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`,
+    { useNewUrlParser: true, useUnifiedTopology: true }
+  )
+  .then(() => {
+    app.listen(5000, () => {
+      console.log("server running on 5000");
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  });
