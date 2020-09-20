@@ -16,7 +16,6 @@ const getUsers = async (req, res, next) => {
 const signup = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    console.log(errors);
     return next(
       new HttpError("invalid inputs passed,please check your data", 422)
     );
@@ -67,7 +66,10 @@ const login = async (req, res, next) => {
     return next(new HttpError("invalid credentials could not log you in", 401));
   }
 
-  res.json({ message: "Logged in!" });
+  res.json({
+    message: "Logged in!",
+    user: existingUser.toObject({ getters: true }),
+  });
 };
 
 exports.getUsers = getUsers;
