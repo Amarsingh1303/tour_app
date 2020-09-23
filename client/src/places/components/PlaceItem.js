@@ -30,7 +30,7 @@ const PlaceItem = (props) => {
     setShowConfirmModel(false);
     try {
       await sendRequest(
-        process.env.REACT_APP_BACKEND_URL + `/api/places/${props.id}`,
+        process.env.REACT_APP_BACKEND_URL + `/places/${props.id}`,
         "DELETE",
         null,
         {
