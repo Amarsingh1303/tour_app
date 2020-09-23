@@ -13,7 +13,7 @@ const app = express();
 
 app.use(bodyParser.json());
 
-app.use("/uploads/images", express.static(path.join("uploads", "images")));
+app.use("/uploads/images", express.static(path.join("uploads", "images"))); //for different development
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -28,6 +28,8 @@ app.use((req, res, next) => {
 
 app.use("/api/places", placeRoutes);
 app.use("/api/users", usersRoutes);
+
+// app.use("/uploads/images", express.static(path.join("uploads", "images"))); /////////for combine development
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
@@ -57,7 +59,8 @@ app.use((error, req, res, next) => {
 
 mongoose
   .connect(
-    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.gxqjf.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`,
+    process.env.MONGO_URI ||
+      `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.gxqjf.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`,
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(() => {
