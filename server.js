@@ -29,6 +29,14 @@ app.use((req, res, next) => {
 app.use("/api/places", placeRoutes);
 app.use("/api/users", usersRoutes);
 
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "client", "build", "index.html")); // relative path
+  });
+}
+
 app.use((req, res, next) => {
   const error = new HttpError("Could not find this route", 404);
   next(error);
@@ -49,11 +57,11 @@ app.use((error, req, res, next) => {
 
 mongoose
   .connect(
-    `mongodb+srv://Amarsingh:${process.env.DB_PASSWORD}@cluster0.gxqjf.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`,
+    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.gxqjf.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`,
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(() => {
-    app.listen(5000, () => {
+    app.listen(process.env.PORT || 5000, () => {
       console.log("server running on 5000");
     });
   })
